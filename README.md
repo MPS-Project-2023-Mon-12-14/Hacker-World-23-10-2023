@@ -1,8 +1,10 @@
 Metodologie de dezvoltare folosită : Agile
 <br>
-Manager + CTO + CEO: Catalina 
+Project manager: Popa Catalina Elena
 <br>
-Engineer + Tester: Tung, Rares, Ioan, Vlad
+Developer: Tung NGUYEN QUANG, STEFAN Rares Constantin, Arghira Ioan Daniel , ZINCĂ Vlad Alexandru
+<br>
+Project leader: Tung NGUYEN QUANG
 <br>
 Limbaj de programare folosit: Python
 <br>
