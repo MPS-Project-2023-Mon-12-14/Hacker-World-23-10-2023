@@ -20,11 +20,11 @@ class Data:
 def create_human_readable_inputs(data):
     if os.stat("human_readable_input/results.txt").st_size == 0:
         with open('human_readable_input/results.txt', 'w+') as writer:
-            writer.write(data.train_res_df.to_string())
+            writer.write(data.results_df.to_string())
 
     if os.stat("human_readable_input/ground-truth.txt").st_size == 0:
         with open('human_readable_input/train_ground-truth.txt', 'w+') as writer:
-            writer.write(data.train_gnd_df.to_string())
+            writer.write(data.ground_truth_df.to_string())
 
 
 if __name__ == "__main__":
