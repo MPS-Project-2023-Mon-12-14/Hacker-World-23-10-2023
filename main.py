@@ -79,24 +79,37 @@ class Tree:
 
         child_values = [self._evaluate_tree(child) for child in node.children]
 
-        if node.operation == 'min':
+        if node.operation == Operations.MIN:
             node.value = min(child_values)
-        elif node.operation == 'max':
+        elif node.operation == Operations.MAX:
             node.value = max(child_values)
-        elif node.operation == 'mean':
+        elif node.operation == Operations.ARITHMETIC_MEAN:
             node.value = sum(child_values) / len(child_values)
-        elif node.operation == 'geomean':
+        elif node.operation == Operations.GEOMETRIC_MEAN:
             node.value = (functools.reduce(operator.mul, child_values)) ** (1 / len(child_values))
-        elif node.operation == 'weightedmean':
+        elif node.operation == Operations.WEIGHTED_MEAN:
             weights = random.choices(range(2, 11), k=len(child_values))
             node.value = sum(val * weight for val, weight in zip(child_values, weights)) / sum(weights)
-        elif node.operation == 'median':
+        elif node.operation == Operations.MEDIAN:
             node.value = sorted(child_values)[len(child_values) // 2]
-        elif node.operation == 'ifelse':
-            if child_values[0] < child_values[1]:
-                node.value = child_values[2]
-            else:
-                node.value = child_values[3]
+        elif node.operation == Operations.IF_ELSE:
+            # Determine the number of conditions based on the assumption that
+            # child values are organized in pairs
+            num_conditions = len(child_values) // 2
+
+            # Check if there is at least one condition-outcome pair
+            if num_conditions > 0:
+
+                # Pair conditions and outcomes for iteration using zip
+                condition_outcome_pairs = zip(child_values[:num_conditions], child_values[num_conditions:])
+
+                # Iterate through the condition-outcome pairs and assign outcome
+                # to node value if condition is True
+                for condition, outcome in condition_outcome_pairs:
+                    if condition:
+                        node.value = outcome
+                        break
+
         # elif node.operation == 'custom_arithmetic':
         #     available_operations = ['x^2', '|x-0.5|', 'x+0.5', '2x', '0.5x', 'x*y', 'x+y', '|x-y|', 'x^y']
         #     operation = random.choice(available_operations)
