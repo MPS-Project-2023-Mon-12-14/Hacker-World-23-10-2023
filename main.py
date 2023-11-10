@@ -97,7 +97,7 @@ class Node:
                     list
     :meth __init__(value, operation, children): constructor for Node class
     """
-    def __init__(self, value: Union[None, np.float64] = None, operation: Union[None, Operations] = None, children: Union[None, List['Node']] = None) -> None:
+    def __init__(self, value: Union[None, np.float64] = None, operation: Union[None, Operations] = None, children: Union[None, List[ForwardRef('Node')]] = None) -> None:
         """
         :attr value: Union[None, np.float64] representing the threshold, for
                         leaves, or the computed result, for other nodes
