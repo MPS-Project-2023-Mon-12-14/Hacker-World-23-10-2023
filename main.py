@@ -1,3 +1,4 @@
+# main.py
 """
 This is a module of the application that concerns itself with Data, Operations,
 Node, Tree and Utils classes. It also contains the main function that runs the
@@ -20,15 +21,16 @@ import operator
 import os
 import random
 from enum import Enum
-import pandas as pd
+from typing import ForwardRef, List, Union
+
 import numpy as np
-from typing import List, Union, ForwardRef
+import pandas as pd
 
 NUMBER_OF_TREES_TO_GENERATE = 10
 NUMBER_OF_TREES_TO_STORE = 5
 
-RESULTS_FILE = 'input/train_algo-results.csv'
-GROUND_TRUTH_FILE = 'input/train_ground-truth.csv'
+RESULTS_FILE = "input/train_algo-results.csv"
+GROUND_TRUTH_FILE = "input/train_ground-truth.csv"
 
 
 class Data:
@@ -42,6 +44,7 @@ class Data:
     :meth read_csv_files: reads the CSV files and stores them inside the class
                             attributes
     """
+
     def __init__(self, res_file: str, gnd_file: str) -> None:
         """
         Constructor for Data class.
@@ -76,13 +79,14 @@ class Operations(Enum):
     :const MEDIAN: str representing the median operation
     :const IF_ELSE: str representing the if-else operation
     """
-    MIN = 'min'
-    MAX = 'max'
-    ARITHMETIC_MEAN = 'mean'
-    GEOMETRIC_MEAN = 'geomean'
-    WEIGHTED_MEAN = 'weightedmean'
-    MEDIAN = 'median'
-    IF_ELSE = 'ifelse'
+
+    MIN = "min"
+    MAX = "max"
+    ARITHMETIC_MEAN = "mean"
+    GEOMETRIC_MEAN = "geomean"
+    WEIGHTED_MEAN = "weightedmean"
+    MEDIAN = "median"
+    IF_ELSE = "ifelse"
     # self.CUSTOM_ARITHMETIC = 'custom_arithmetic'
 
 
@@ -97,7 +101,13 @@ class Node:
                     list
     :meth __init__(value, operation, children): constructor for Node class
     """
-    def __init__(self, value: Union[None, np.float64] = None, operation: Union[None, Operations] = None, children: Union[None, List[ForwardRef('Node')]] = None) -> None:
+
+    def __init__(
+        self,
+        value: Union[None, np.float64] = None,
+        operation: Union[None, Operations] = None,
+        children: Union[None, List[ForwardRef("Node")]] = None,
+    ) -> None:
         """
         :attr value: Union[None, np.float64] representing the threshold, for
                         leaves, or the computed result, for other nodes
@@ -123,6 +133,7 @@ class Tree:
     :meth print_tree(): print the tree
     :meth _print_tree(node, level): print the tree recursively
     """
+
     def __init__(self, thresholds: pd.DataFrame) -> None:
         """
         Constructor for Tree class.
@@ -234,6 +245,7 @@ class Utils:
     Class for utility functions.
     :meth create_human_readable_inputs(data): create human readable inputs
     """
+
     @staticmethod
     def create_human_readable_inputs(data: Data) -> None:
         """
@@ -242,11 +254,11 @@ class Utils:
         :return: None
         """
         if os.stat("human_readable_input/results.txt").st_size == 0:
-            with open('human_readable_input/results.txt', 'w+') as writer:
+            with open("human_readable_input/results.txt", "w+", encoding="utf-8") as writer:
                 writer.write(data.results_df.to_string())
 
         if os.stat("human_readable_input/ground-truth.txt").st_size == 0:
-            with open('human_readable_input/train_ground-truth.txt', 'w+') as writer:
+            with open("human_readable_input/train_ground-truth.txt", "w+", encoding="utf-8") as writer:
                 writer.write(data.ground_truth_df.to_string())
 
 
@@ -264,8 +276,9 @@ def main() -> None:
     top_trees = []
     for _ in range(NUMBER_OF_TREES_TO_GENERATE):
         tree = Tree(data.results_df)
-        if not top_trees or (tree.root.value is not None and
-                             (t.root.value is None or tree.root.value >= t.root.value for t in top_trees)):
+        if not top_trees or (
+            tree.root.value is not None and (t.root.value is None or tree.root.value >= t.root.value for t in top_trees)
+        ):
             top_trees.append(tree)
             if len(top_trees) > NUMBER_OF_TREES_TO_STORE:
                 top_trees.remove(min(top_trees, key=lambda t: t.root.value))
