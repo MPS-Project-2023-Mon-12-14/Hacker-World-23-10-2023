@@ -20,7 +20,6 @@ import functools
 import operator
 import os
 import random
-import time
 from enum import Enum
 from threading import Thread
 from typing import ForwardRef, List, Union
@@ -104,6 +103,8 @@ class Node:
 
     def __init__(
             self,
+            pos: Union[None, np.float64] = None,
+            threshold: Union[None, List[np.float64]] = None,
             value: Union[None, np.float64] = None,
             operation: Union[None, Operations] = None,
             children: Union[None, List[ForwardRef("Node")]] = None,
@@ -116,6 +117,8 @@ class Node:
         :attr children: Union[None, List['Node']] representing the node's
                         children list
         """
+        self.pos = pos
+        self.threshold = threshold
         self.value = value
         self.operation = operation
         self.children = children or []
@@ -141,15 +144,12 @@ class Tree(Thread):
         :return: None
         """
         Thread.__init__(self)
-        self.max_levels = random.randint(3, 7)
-        self.root = self._random_tree(self.max_levels, thresholds)
-        self.processing_time = None
+        self.thresholds = thresholds
+        self.max_levels = random.randint(3, 5)
+        self.root = None
 
     def run(self) -> None:
-        start = time.time()
-        self._evaluate_tree(self.root)
-        end = time.time()
-        self.processing_time = end - start
+        self.root = self._random_tree(self.max_levels, self.thresholds)
 
     def _random_tree(self, max_levels: int, thresholds: pd.DataFrame) -> Node:
         """
@@ -160,25 +160,27 @@ class Tree(Thread):
         :return: Node object representing the root node of the tree
         """
         if max_levels == 0:
-            value = random.choice(thresholds.iloc[0])
-            return Node(value=value)
+            pos = random.randint(0, 10)
+            threshold = self.thresholds.iloc[:, pos]
+            return Node(pos=pos, threshold=threshold)
 
         operation = random.choice(list(Operations))
-        num_children = random.randint(2, 10)
+        num_children = random.randint(2, 4)
         children = [self._random_tree(max_levels - 1, thresholds) for _ in range(num_children)]
 
         return Node(operation=operation, children=children)
 
-    def _evaluate_tree(self, node: Node) -> np.float64:
+    def evaluate_tree(self, node: Node, row: int) -> np.float64:
         """
         Evaluate the tree.
         :param node: Node object representing the root node of the tree
         :return: np.float64 representing the computed result
         """
         if not node.children:
+            node.value = node.threshold[row]
             return node.value
 
-        child_values = [self._evaluate_tree(child) for child in node.children]
+        child_values = [self.evaluate_tree(child, row) for child in node.children]
 
         if node.operation == Operations.MIN:
             node.value = min(child_values)
@@ -240,7 +242,7 @@ class Tree(Thread):
         :return: None
         """
         if not node.children:
-            print(" " * (4 * level) + str(node.value))
+            print(" " * (4 * level) + str(node.pos))
         else:
             print(" " * (4 * level) + str(node.operation))
             for child in node.children:
@@ -268,6 +270,7 @@ class Utils:
             with open("human_readable_input/train_ground-truth.txt", "w+", encoding="utf-8") as writer:
                 writer.write(data.ground_truth_df.to_string())
 
+    @staticmethod
     def caculate_F_measure(data: Data, threshold: np.float64) -> np.float64:
         pixel = round(threshold * 255)
         f_measures = data.ground_truth_df[['Var' + str(pixel)]]
@@ -275,6 +278,17 @@ class Utils:
         sum = 0
         for i in range(0, length):
             sum += f_measures['Var' + str(pixel)][i]
+        return sum / length
+
+    @staticmethod
+    def get_f_measure(tree: Tree, data: Data) -> np.float64:
+        length = len(data.results_df)
+        sum = 0
+        for i in range(0, length):
+            threshold_value = tree.evaluate_tree(tree.root, i)
+            pixel_value = round(threshold_value * 255)
+            f_measures = data.ground_truth_df[['Var' + str(pixel_value)]]
+            sum += f_measures['Var' + str(pixel_value)][i]
         return sum / length
 
 
@@ -290,6 +304,7 @@ def main() -> None:
     Utils.create_human_readable_inputs(data)
 
     trees = []
+
     for _ in range(NUMBER_OF_TREES_TO_GENERATE):
         tree = Tree(data.results_df)
         trees.append(tree)
@@ -300,12 +315,10 @@ def main() -> None:
         trees[i].join()
 
     f_measures = []
-    for i, tree in enumerate(trees):
-        f_measures.append(Utils.caculate_F_measure(data, tree.root.value))
+    for i in range(NUMBER_OF_TREES_TO_GENERATE):
+        f_measures.append(Utils.get_f_measure(trees[i], data))
 
     trees[f_measures.index(max(f_measures))].print_tree()
-    for i, tree in enumerate(trees):
-        print(tree.processing_time)
 
 
 if __name__ == "__main__":
