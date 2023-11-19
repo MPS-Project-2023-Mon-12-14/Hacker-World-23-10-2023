@@ -1,10 +1,11 @@
-Metodologie de dezvoltare folosită : Agile
+Development methodology: Agile
 <br>
-Project manager: Popa Catalina Elena
-<br>
-Developer: Tung NGUYEN QUANG, STEFAN Rares Constantin, Arghira Ioan Daniel , ZINCĂ Vlad Alexandru
+Programming language: Python
 <br>
 Project leader: Tung NGUYEN QUANG
 <br>
-Limbaj de programare folosit: Python
+Documentation and Reporting Team: Tung NGUYEN QUANG, Arghira Ioan Daniel, STEFAN Rares Constantin
 <br>
+Developers: Popa Catalina Elena,  ZINCĂ Vlad Alexandru
+<br>
+Tester: Tung NGUYEN QUANG
