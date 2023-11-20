@@ -10,4 +10,8 @@ Developers: Popa Catalina Elena,  ZINCĂ Vlad Alexandru
 <br>
 Tester: Tung NGUYEN QUANG
 <br>
-Report : https://drive.google.com/drive/folders/1vfv2p83UHX5UTwpz5U2-3OhpnBeKU-GJ
+Tech report : https://drive.google.com/file/d/1xw5UbIwCSHLdWbBeoDSqvsz2nGcINdIh/view?usp=drive_link
+<br>
+Rish report : https://drive.google.com/file/d/1duGQQbBCgBHr-GyZOQkxvj-Z9zy8hQ8r/view?usp=drive_link
+<br>
+Management report : https://drive.google.com/file/d/1duGQQbBCgBHr-GyZOQkxvj-Z9zy8hQ8r/view?usp=drive_link
