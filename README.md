@@ -14,4 +14,4 @@ Tech report : https://drive.google.com/file/d/1xw5UbIwCSHLdWbBeoDSqvsz2nGcINdIh/
 <br>
 Risk report : https://drive.google.com/file/d/1duGQQbBCgBHr-GyZOQkxvj-Z9zy8hQ8r/view?usp=drive_link
 <br>
-Management report : https://drive.google.com/file/d/1duGQQbBCgBHr-GyZOQkxvj-Z9zy8hQ8r/view?usp=drive_link
+Management report : https://drive.google.com/file/d/1J5nMM4GGxMKkkUgvxvy1FX7ZSUSSgRhP/view?usp=drive_link
