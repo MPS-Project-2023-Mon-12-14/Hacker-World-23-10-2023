@@ -32,6 +32,7 @@ RESULTS_FILE = "input/train_algo-results.csv"
 GROUND_TRUTH_FILE = "input/train_ground-truth.csv"
 
 
+
 class Data:
     """
     Class for all types of data: input CSVs, best trees generated, etc. Best
@@ -103,7 +104,7 @@ class Node:
 
     def __init__(
             self,
-            pos: Union[None, np.float64] = None,
+            pos: Union[None, np.int] = None,
             threshold: Union[None, List[np.float64]] = None,
             value: Union[None, np.float64] = None,
             operation: Union[None, Operations] = None,
@@ -271,7 +272,7 @@ class Utils:
                 writer.write(data.ground_truth_df.to_string())
 
     @staticmethod
-    def caculate_F_measure(data: Data, threshold: np.float64) -> np.float64:
+    def caculate_F_measure(data: Data, threshold: np.float64) -> float:
         pixel = round(threshold * 255)
         f_measures = data.ground_truth_df[['Var' + str(pixel)]]
         length = len(f_measures['Var' + str(pixel)])
@@ -281,7 +282,7 @@ class Utils:
         return sum / length
 
     @staticmethod
-    def get_f_measure(tree: Tree, data: Data) -> np.float64:
+    def get_f_measure(tree: Tree, data: Data) -> float:
         length = len(data.results_df)
         sum = 0
         for i in range(0, length):
