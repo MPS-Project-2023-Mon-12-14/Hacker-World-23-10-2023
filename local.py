@@ -305,7 +305,7 @@ class Utils:
         return sum / length
 
 
-def side_thread(tree: Tree, index_parent, index, arr):
+def side_thread(tree: Tree, index, arr):
     dir_list = os.listdir(LOCAL_FOLDER)
     number_file = len(dir_list)
 
@@ -341,7 +341,7 @@ def thread_calculate_F_measure(tree: Tree, id: int, f_measure):
         list_of_arr.append(arr)
 
     for i in range(4):
-        t0 = Thread(target=side_thread, args=(tree, id, i, list_of_arr[i]))
+        t0 = Thread(target=side_thread, args=(tree, i, list_of_arr[i]))
         list_of_thread.append(t0)
 
     for i in range(4):
@@ -383,23 +383,23 @@ def main() -> None:
     for i in range(NUMBER_OF_TREES_TO_GENERATE):
         trees[i].print_tree()
 
-    thread_list = []
-    f_value = [0 for i in range(2)]
-    for i in range(NUMBER_OF_TREES_TO_GENERATE):
-        t0 = Thread(target=thread_calculate_F_measure, args=(trees[i], i, f_value))
-        thread_list.append(t0)
-
-    for i in range(NUMBER_OF_TREES_TO_GENERATE):
-        thread_list[i].start()
-
-    for i in range(NUMBER_OF_TREES_TO_GENERATE):
-        thread_list[i].join()
-
-    for i in range(NUMBER_OF_TREES_TO_GENERATE):
-        print(f_value[i])
-
-    end = time.time()
-    print(end - start)
+    # thread_list = []
+    # f_value = [0 for i in range(2)]
+    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
+    #     t0 = Thread(target=thread_calculate_F_measure, args=(trees[i], i, f_value))
+    #     thread_list.append(t0)
+    #
+    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
+    #     thread_list[i].start()
+    #
+    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
+    #     thread_list[i].join()
+    #
+    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
+    #     print(f_value[i])
+    #
+    # end = time.time()
+    # print(end - start)
 
 
 if __name__ == "__main__":

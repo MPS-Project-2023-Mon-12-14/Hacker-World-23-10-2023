@@ -16,16 +16,16 @@ application.
 :func main: main function that runs the application
 """
 
+import argparse
 import functools
 import operator
 import os
 import random
+import re
 import string
-import time
 from enum import Enum
 from threading import Thread
 from typing import ForwardRef, List, Union
-import re
 
 import numpy as np
 import pandas as pd
@@ -306,7 +306,7 @@ class Utils:
         return sum / length
 
 
-def side_thread(tree: Tree, index_parent, index, arr):
+def side_thread(tree: Tree, index, arr):
     dir_list = os.listdir(LOCAL_FOLDER)
     number_file = len(dir_list)
 
@@ -342,7 +342,7 @@ def thread_calculate_F_measure(tree: Tree, id: int, f_measure):
         list_of_arr.append(arr)
 
     for i in range(4):
-        t0 = Thread(target=side_thread, args=(tree, id, i, list_of_arr[i]))
+        t0 = Thread(target=side_thread, args=(tree, i, list_of_arr[i]))
         list_of_thread.append(t0)
 
     for i in range(4):
@@ -400,17 +400,35 @@ def parse_file(file_path: str) -> Tree:
     return tree
 
 
+def test_tree(file_path: str, tree: Tree) -> None:
+    result = pd.read_csv(file_path)
+    length = len(result)
+    print(result)
+    sum_threshold = 0.0
+    for i in range(length):
+        threshold = tree.evaluate_tree(tree.root, i, result)
+
+    print(sum_threshold / length)
+
+
 def main() -> None:
     """
     Main function that runs the application.
     :return: None
     """
-    print("Parsing a tree as an example:")
-    
-    # Example of filename and usage:
-    file_path = 'suise.txt'
-    parsed_tree = parse_file(file_path)
-    parsed_tree.print_tree()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--name', help='name of tree')
+    parser.add_argument('-t', '--test', help='name of test file for tree')
+    cfg = parser.parse_args()
+
+    file_path_of_tree = cfg.name
+    file_path_for_test_tree = cfg.test
+    if os.path.isfile(file_path_of_tree) and os.path.isfile(file_path_for_test_tree):
+        parsed_tree = parse_file(file_path_of_tree)
+        parsed_tree.print_tree()
+        test_tree(file_path_for_test_tree, parsed_tree)
+    else:
+        print("check name again")
 
 
 if __name__ == "__main__":
