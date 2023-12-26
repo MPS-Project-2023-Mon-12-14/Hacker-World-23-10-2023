@@ -367,7 +367,7 @@ def parse_file(file_path: str) -> Tree:
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    tree = Tree(identity=1, name="ExampleTree")
+    tree = Tree(identity=1, name="ExampleTree")  # You can customize identity and name
     stack = []
 
     for line in lines:
@@ -387,8 +387,7 @@ def parse_file(file_path: str) -> Tree:
             operation_str = line.split('.')[2]
             operation = Operations[operation_str]
             new_node = Node(operation=operation)
-            current_node = stack[-1]
-            current_node.children.append(new_node)
+            tree.root.children.append(new_node)
             stack.append(new_node)
 
         elif line.startswith('LEAF'):
