@@ -402,9 +402,11 @@ def parse_file(file_path: str) -> Tree:
 def test_tree(file_path: str, tree: Tree) -> None:
     result = pd.read_csv(file_path)
     length = len(result)
-    sum_threshold = 0.0
+    sum_threshold = 0
     for i in range(length):
         threshold = tree.evaluate_tree(tree.root, i, result)
+        sum_threshold = sum_threshold + threshold
+    print(sum_threshold / length)
 
 
 def main() -> None:
