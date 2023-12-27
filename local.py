@@ -380,26 +380,31 @@ def main() -> None:
         trees[i].start()
     for i in range(NUMBER_OF_TREES_TO_GENERATE):
         trees[i].join()
+
+    thread_list = []
+    f_value = [0 for i in range(2)]
+    for i in range(NUMBER_OF_TREES_TO_GENERATE):
+        t0 = Thread(target=thread_calculate_F_measure, args=(trees[i], i, f_value))
+        thread_list.append(t0)
+
+    for i in range(NUMBER_OF_TREES_TO_GENERATE):
+        thread_list[i].start()
+
+    for i in range(NUMBER_OF_TREES_TO_GENERATE):
+        thread_list[i].join()
+
+    end = time.time()
+    print(end - start)
+
+    max_value = 0
+    max_index = 0
     for i in range(NUMBER_OF_TREES_TO_GENERATE):
         trees[i].print_tree()
-
-    # thread_list = []
-    # f_value = [0 for i in range(2)]
-    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
-    #     t0 = Thread(target=thread_calculate_F_measure, args=(trees[i], i, f_value))
-    #     thread_list.append(t0)
-    #
-    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
-    #     thread_list[i].start()
-    #
-    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
-    #     thread_list[i].join()
-    #
-    # for i in range(NUMBER_OF_TREES_TO_GENERATE):
-    #     print(f_value[i])
-    #
-    # end = time.time()
-    # print(end - start)
+        print(f_value[i])
+        if f_value[i] > max_value:
+            max_value = f_value[i]
+            max_index = i
+    print("The most optimal tree : ", trees[max_index].name)
 
 
 if __name__ == "__main__":

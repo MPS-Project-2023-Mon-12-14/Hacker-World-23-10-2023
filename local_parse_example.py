@@ -367,7 +367,7 @@ def parse_file(file_path: str) -> Tree:
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    tree = Tree(identity=1, name="ExampleTree")
+    tree = Tree(identity=1, name="ExampleTree")  # You can customize identity and name
     stack = []
 
     for line in lines:
@@ -387,8 +387,7 @@ def parse_file(file_path: str) -> Tree:
             operation_str = line.split('.')[2]
             operation = Operations[operation_str]
             new_node = Node(operation=operation)
-            current_node = stack[-1]
-            current_node.children.append(new_node)
+            tree.root.children.append(new_node)
             stack.append(new_node)
 
         elif line.startswith('LEAF'):
@@ -403,9 +402,23 @@ def parse_file(file_path: str) -> Tree:
 def test_tree(file_path: str, tree: Tree) -> None:
     result = pd.read_csv(file_path)
     length = len(result)
-    sum_threshold = 0.0
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
+    pixel_value = result.iloc[:, 0]
+    pixel_class = result.iloc[:, 1]
     for i in range(length):
-        threshold = tree.evaluate_tree(tree.root, i, result)
+        threshold_value = tree.evaluate_tree(tree.root, i, result)
+        if threshold_value < pixel_value[i] and pixel_class[i] == 0:
+            TP = TP + 1
+        elif threshold_value < pixel_value[i] and pixel_class[i] == 1:
+            FP = FP + 1
+        elif threshold_value > pixel_value[i] and pixel_class[i] == 1:
+            TN = TN + 1
+        elif threshold_value > pixel_value[i] and pixel_class[i] == 0:
+            FN = FN + 1
+    print(TP / (TP + 0.5 * (FP + FN)))
 
 
 def main() -> None:
