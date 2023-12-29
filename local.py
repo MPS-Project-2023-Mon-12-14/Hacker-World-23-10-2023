@@ -21,7 +21,6 @@ import operator
 import os
 import random
 import string
-import time
 from enum import Enum
 from threading import Thread
 from typing import ForwardRef, List, Union
@@ -367,12 +366,10 @@ def main() -> None:
     Main function that runs the application.
     :return: None
     """
-    start = time.time()
     trees = []
 
     for i in range(NUMBER_OF_TREES_TO_GENERATE):
         name = ''.join(random.choices(string.ascii_lowercase, k=5))
-        print(name)
         tree = Tree(i, name)
         trees.append(tree)
 
@@ -393,18 +390,13 @@ def main() -> None:
     for i in range(NUMBER_OF_TREES_TO_GENERATE):
         thread_list[i].join()
 
-    end = time.time()
-    print(end - start)
-
     max_value = 0
     max_index = 0
     for i in range(NUMBER_OF_TREES_TO_GENERATE):
-        trees[i].print_tree()
-        print(f_value[i])
         if f_value[i] > max_value:
             max_value = f_value[i]
             max_index = i
-    print("The most optimal tree : ", trees[max_index].name)
+    trees[max_index].print_tree()
 
 
 if __name__ == "__main__":

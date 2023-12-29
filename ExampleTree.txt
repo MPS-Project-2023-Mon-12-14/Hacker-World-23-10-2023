@@ -1,0 +1,7 @@
+ROOT.Operations.MEDIAN
+    NODE.Operations.MAX
+        LEAF.Pos.5
+        LEAF.Pos.8
+    NODE.Operations.MAX
+        LEAF.Pos.5
+        LEAF.Pos.10
